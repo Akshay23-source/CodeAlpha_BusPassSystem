@@ -1,0 +1,10 @@
+version: "3"
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
