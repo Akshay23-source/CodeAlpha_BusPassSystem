@@ -8,18 +8,21 @@ from utils.db import db
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
+# ✅ IMPORT MODELS (VERY IMPORTANT 🔥)
+from models.user_model import User
+
 # ✅ Existing routes
 from routes.auth_routes import auth
 from routes.pass_routes import pass_bp
 
-# ✅ Import modules (IMPORTANT: match file names exactly)
+# ✅ Import modules
 from routes import admin_routes
-from routes import payment_routes   # <-- if your file is payments_routes.py
+from routes import payment_routes
 from routes import qr_routes
 
 # ✅ Extract blueprints
 admin = admin_routes.admin
-payment = payment_routes.payment   # <-- match above
+payment = payment_routes.payment
 qr = qr_routes.qr
 
 
@@ -31,7 +34,11 @@ db.init_app(app)
 CORS(app)
 JWTManager(app)
 
-# ✅ Optional home route (fixes "Not Found")
+# ✅ Create tables automatically 🔥
+with app.app_context():
+    db.create_all()
+
+# ✅ Home route
 @app.route("/")
 def home():
     return "Backend is running 🚀"
