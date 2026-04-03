@@ -1,34 +1,31 @@
 from flask import Blueprint, jsonify
 import qrcode
 import os
-from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.user_model import User
 from models.pass_model import Pass
 
+# ✅ DEFINE BLUEPRINT FIRST
 qr = Blueprint("qr", __name__)
 
 # 🎫 GENERATE QR
 @qr.route("/generate", methods=["GET"])
-@jwt_required()
 def generate_qr():
-    # 🔐 Get logged-in user
-    user_email = get_jwt_identity()
-    user = User.query.filter_by(email=user_email).first()
+
+    # 🔥 TEMP: get first user (no JWT)
+    user = User.query.first()
 
     if not user:
         return jsonify({"msg": "User not found"}), 404
 
-    # 📦 Get user's pass
     user_pass = Pass.query.filter_by(user_id=user.id).first()
 
     if not user_pass:
         return jsonify({"msg": "No pass found"}), 404
 
-    # ❗ Only approved passes get QR
     if user_pass.status != "approved":
         return jsonify({"msg": "Pass not approved yet"}), 403
 
-    # 🔥 QR DATA (IMPORTANT)
+    # 🔥 QR DATA
     data = f"{user.id}|{user_pass.id}"
 
     # 🎫 Generate QR
@@ -49,7 +46,7 @@ def generate_qr():
     })
 
 
-# 🔍 VERIFY QR (NEW 🔥)
+# 🔍 VERIFY QR
 @qr.route("/verify/<string:data>", methods=["GET"])
 def verify_qr(data):
     try:
