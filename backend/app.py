@@ -8,8 +8,9 @@ from utils.db import db
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
-# ✅ IMPORT MODELS (VERY IMPORTANT 🔥)
+# ✅ IMPORT MODELS (IMPORTANT)
 from models.user_model import User
+from models.pass_model import Pass   # 🔥 ADD THIS (important for DB)
 
 # ✅ Existing routes
 from routes.auth_routes import auth
@@ -34,14 +35,15 @@ db.init_app(app)
 CORS(app)
 JWTManager(app)
 
-# ✅ Create tables automatically 🔥
+# ✅ Create tables automatically
 with app.app_context():
     db.create_all()
 
-# ✅ Home route
+# ✅ Home route (for testing)
 @app.route("/")
 def home():
     return "Backend is running 🚀"
+
 
 # ✅ Register routes
 app.register_blueprint(auth, url_prefix="/api/auth")
@@ -51,5 +53,7 @@ app.register_blueprint(payment, url_prefix="/api/payment")
 app.register_blueprint(qr, url_prefix="/api/qr")
 
 
+# ✅ MAIN RUN (IMPORTANT FOR NETWORK)
 if __name__ == "__main__":
+    print("🔥 Server starting...")
     app.run(host="0.0.0.0", port=5000, debug=True)

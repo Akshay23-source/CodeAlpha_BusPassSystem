@@ -1,19 +1,20 @@
-import { Canvas } from "@react-three/fiber";
-
-function Box() {
-  return (
-    <mesh rotation={[10, 10, 0]}>
-      <boxGeometry />
-      <meshStandardMaterial color="blue" />
-    </mesh>
-  );
-}
+import { motion } from "framer-motion";
 
 export default function ThreeScene() {
   return (
-    <Canvas>
-      <ambientLight />
-      <Box />
-    </Canvas>
+    <motion.div
+      animate={{ rotate: 360 }}
+      transition={{ repeat: Infinity, duration: 10 }}
+      style={styles.box}
+    />
   );
 }
+
+const styles = {
+  box: {
+    width: 100,
+    height: 100,
+    background: "cyan",
+    margin: "auto"
+  }
+};

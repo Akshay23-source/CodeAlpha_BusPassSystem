@@ -6,22 +6,27 @@ export default function Index() {
 
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
-  const [result, setResult] = useState<any>(null); // ✅ FIX 1
+  const [result, setResult] = useState<any>(null);
 
+  // 📷 HANDLE SCAN
   const handleScan = ({ data }: { data: string }) => {
     setScanned(true);
 
-    fetch(`http://192.168.1.45:5000/api/qr/verify/${encodeURIComponent(data)}`)
+    console.log("SCANNED DATA:", data); // ✅ Debug
+
+    fetch(`http://192.168.1.33:5000/api/qr/verify/${encodeURIComponent(data)}`)
       .then(res => res.json())
       .then(res => {
+        console.log("FULL RESPONSE:", res); // ✅ Debug
         setResult(res);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log("ERROR:", err);
         setResult({ status: "error" });
       });
   };
 
-  // 🔐 Permission
+  // 🔐 PERMISSION
   if (!permission) {
     return <Text style={styles.center}>Loading...</Text>;
   }
@@ -39,13 +44,18 @@ export default function Index() {
 
   // 🎯 RESULT SCREEN
   if (result) {
-    const isValid = result?.status === "approved"; // ✅ FIX 2
+
+    const isValid =
+      result?.status === "approved" ||
+      result?.msg?.toLowerCase().includes("valid") ||
+      result?.msg?.toLowerCase().includes("pass valid");
 
     return (
       <View style={[
         styles.resultContainer,
         { backgroundColor: isValid ? "#0f9d58" : "#d93025" }
       ]}>
+        
         <Text style={styles.icon}>
           {isValid ? "✔️" : "❌"}
         </Text>
@@ -57,7 +67,7 @@ export default function Index() {
         {isValid && (
           <>
             <Text style={styles.text}>Route: {result?.route}</Text>
-            <Text style={styles.text}>User: {result?.user}</Text> {/* ✅ FIX 3 */}
+            <Text style={styles.text}>User: {result?.user}</Text>
           </>
         )}
 
@@ -70,6 +80,7 @@ export default function Index() {
         >
           🔄 Scan Again
         </Text>
+
       </View>
     );
   }
