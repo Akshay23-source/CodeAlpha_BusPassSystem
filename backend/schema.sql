@@ -1,0 +1,30 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  public_id TEXT UNIQUE,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  role TEXT DEFAULT 'user',
+  is_active BOOLEAN DEFAULT 1,
+  email_verified BOOLEAN DEFAULT 0,
+  remember_me BOOLEAN DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  deleted_at DATETIME
+);
+
+CREATE TABLE IF NOT EXISTS bus_passes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  public_id TEXT UNIQUE,
+  user_id INTEGER NOT NULL,
+  route TEXT NOT NULL,
+  pass_type TEXT DEFAULT 'monthly',
+  amount REAL DEFAULT 45.0,
+  status TEXT DEFAULT 'pending',
+  start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  end_date DATETIME,
+  notes TEXT DEFAULT '',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  deleted_at DATETIME
+);
