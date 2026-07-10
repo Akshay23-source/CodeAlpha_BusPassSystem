@@ -11,6 +11,7 @@ import { Card } from './components/ui/Card';
 import { StatCard } from './components/cards/StatCard';
 import { PassCard } from './components/cards/PassCard';
 import { FeedbackToast } from './components/FeedbackToast';
+import { LandingPage } from './pages/LandingPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { requestJson, authHeaders } from './services/api';
 import './index.css';
@@ -131,67 +132,73 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.2),_transparent_35%),linear-gradient(135deg,_#020617,_#0f172a)] px-4 py-4 text-slate-100 sm:px-6 lg:px-8">
       <FeedbackToast />
-      <Navbar isLoggedIn={isLoggedIn} onLogout={logout} onToggleAuth={() => setAuthMode((prev) => (prev === 'signup' ? 'login' : 'signup'))} />
+      {!isLoggedIn ? (
+        <LandingPage />
+      ) : (
+        <>
+          <Navbar isLoggedIn={isLoggedIn} onLogout={logout} onToggleAuth={() => setAuthMode((prev) => (prev === 'signup' ? 'login' : 'signup'))} />
 
-      <div className="flex gap-6">
-        <Sidebar />
-        <main className="flex-1 space-y-6">
-          <HeroCard onPrimaryAction={() => setAuthMode('signup')} />
+          <div className="flex gap-6">
+            <Sidebar />
+            <main className="flex-1 space-y-6">
+              <HeroCard onPrimaryAction={() => setAuthMode('signup')} />
 
-          <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid gap-4 md:grid-cols-3">
-            {summaryStats.map((item) => (
-              <StatCard key={item.title} title={item.title} value={item.value} subtitle={item.subtitle} icon={item.title.includes('Pass') ? Ticket : item.title.includes('Estimated') ? BarChart3 : Activity} />
-            ))}
-          </motion.section>
+              <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid gap-4 md:grid-cols-3">
+                {summaryStats.map((item) => (
+                  <StatCard key={item.title} title={item.title} value={item.value} subtitle={item.subtitle} icon={item.title.includes('Pass') ? Ticket : item.title.includes('Estimated') ? BarChart3 : Activity} />
+                ))}
+              </motion.section>
 
-          {!isLoggedIn ? (
-            <section className="grid gap-6 xl:grid-cols-[0.95fr_0.75fr]">
-              <AuthForm authMode={authMode} form={form} onFieldChange={(field, value) => setForm((prev) => ({ ...prev, [field]: value }))} onSubmit={handleAuthSubmit} loading={loading} switchMode={setAuthMode} />
-              <Card>
-                <div className="mb-4 flex items-center gap-2 text-sm font-medium text-blue-300">
-                  <ShieldCheck className="h-4 w-4" />
-                  Why riders trust this experience
-                </div>
-                <div className="space-y-3 text-sm text-slate-400">
-                  <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-3">Fast onboarding with a polished sign-up and login flow.</div>
-                  <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-3">Route-based pass management for daily and monthly travel.</div>
-                  <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-3">Modern dashboard cards that feel premium and helpful.</div>
-                </div>
-              </Card>
-            </section>
-          ) : (
-            <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-              <div className="space-y-6">
-                <Card>
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-blue-300">Travel cockpit</p>
-                      <h3 className="text-xl font-semibold text-slate-100">{user ? `Welcome back, ${user.name}` : 'Your smart bus pass dashboard'}</h3>
+              {!isLoggedIn ? (
+                <section className="grid gap-6 xl:grid-cols-[0.95fr_0.75fr]">
+                  <AuthForm authMode={authMode} form={form} onFieldChange={(field, value) => setForm((prev) => ({ ...prev, [field]: value }))} onSubmit={handleAuthSubmit} loading={loading} switchMode={setAuthMode} />
+                  <Card>
+                    <div className="mb-4 flex items-center gap-2 text-sm font-medium text-blue-300">
+                      <ShieldCheck className="h-4 w-4" />
+                      Why riders trust this experience
                     </div>
-                    <div className="rounded-full bg-emerald-500/15 px-3 py-1 text-sm font-medium text-emerald-400">{passes.length} active pass{passes.length === 1 ? '' : 'es'}</div>
+                    <div className="space-y-3 text-sm text-slate-400">
+                      <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-3">Fast onboarding with a polished sign-up and login flow.</div>
+                      <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-3">Route-based pass management for daily and monthly travel.</div>
+                      <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-3">Modern dashboard cards that feel premium and helpful.</div>
+                    </div>
+                  </Card>
+                </section>
+              ) : (
+                <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+                  <div className="space-y-6">
+                    <Card>
+                      <div className="mb-4 flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-blue-300">Travel cockpit</p>
+                          <h3 className="text-xl font-semibold text-slate-100">{user ? `Welcome back, ${user.name}` : 'Your smart bus pass dashboard'}</h3>
+                        </div>
+                        <div className="rounded-full bg-emerald-500/15 px-3 py-1 text-sm font-medium text-emerald-400">{passes.length} active pass{passes.length === 1 ? '' : 'es'}</div>
+                      </div>
+                      <PassApplicationForm applyRoute={applyRoute} onRouteChange={setApplyRoute} onSubmit={handleApplyPass} onGenerateQr={handleGenerateQr} loading={loading} />
+                    </Card>
                   </div>
-                  <PassApplicationForm applyRoute={applyRoute} onRouteChange={setApplyRoute} onSubmit={handleApplyPass} onGenerateQr={handleGenerateQr} loading={loading} />
-                </Card>
-              </div>
-              <div className="space-y-6">
-                <Card>
-                  <div className="mb-4 flex items-center gap-2 text-sm font-medium text-blue-300">
-                    <Zap className="h-4 w-4" />
-                    Recent passes
+                  <div className="space-y-6">
+                    <Card>
+                      <div className="mb-4 flex items-center gap-2 text-sm font-medium text-blue-300">
+                        <Zap className="h-4 w-4" />
+                        Recent passes
+                      </div>
+                      <div className="space-y-3">
+                        {passes.length === 0 ? (
+                          <div className="rounded-2xl border border-dashed border-slate-800 p-4 text-sm text-slate-400">No passes yet. Apply your first one to begin.</div>
+                        ) : (
+                          passes.map((pass) => <PassCard key={pass.id || pass.route} pass={pass} />)
+                        )}
+                      </div>
+                    </Card>
                   </div>
-                  <div className="space-y-3">
-                    {passes.length === 0 ? (
-                      <div className="rounded-2xl border border-dashed border-slate-800 p-4 text-sm text-slate-400">No passes yet. Apply your first one to begin.</div>
-                    ) : (
-                      passes.map((pass) => <PassCard key={pass.id || pass.route} pass={pass} />)
-                    )}
-                  </div>
-                </Card>
-              </div>
-            </section>
-          )}
-        </main>
-      </div>
+                </section>
+              )}
+            </main>
+          </div>
+        </>
+      )}
     </div>
   );
 }
