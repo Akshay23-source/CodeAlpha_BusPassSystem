@@ -1,0 +1,9 @@
+FROM python:3.10-alpine
+WORKDIR /app
+RUN apk add --no-cache gcc musl-dev postgresql-dev libffi-dev
+COPY backend/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir gunicorn
+COPY backend/ ./
+EXPOSE 5000
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--preload", "app:app"]

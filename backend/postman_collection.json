@@ -1,0 +1,35 @@
+{
+  "info": {
+    "name": "Smart Bus Pass API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Ava\",\n  \"email\": \"ava@example.com\",\n  \"password\": \"StrongPass123!\"\n}"},
+        "url": {"raw": "http://localhost:5000/api/auth/register", "host": ["http://localhost:5000"], "path": ["api", "auth", "register"]}
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"email\": \"ava@example.com\",\n  \"password\": \"StrongPass123!\"\n}"},
+        "url": {"raw": "http://localhost:5000/api/auth/login", "host": ["http://localhost:5000"], "path": ["api", "auth", "login"]}
+      }
+    },
+    {
+      "name": "Apply Pass",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "body": {"mode": "raw", "raw": "{\n  \"route\": \"Central - Airport\",\n  \"passType\": \"monthly\"\n}"},
+        "url": {"raw": "http://localhost:5000/api/pass/apply", "host": ["http://localhost:5000"], "path": ["api", "pass", "apply"]}
+      }
+    }
+  ]
+}
