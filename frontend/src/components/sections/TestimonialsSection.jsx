@@ -123,13 +123,11 @@ export function TestimonialsSection() {
         {/* Testimonials Carousel */}
         <div className="relative h-80 mb-8">
           <AnimatePresence mode="wait">
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={index}
-                testimonial={testimonial}
-                isActive={index === current}
-              />
-            ))}
+            <TestimonialCard
+              key={current}
+              testimonial={testimonials[current]}
+              isActive={true}
+            />
           </AnimatePresence>
         </div>
 
