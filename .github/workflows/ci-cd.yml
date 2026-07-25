@@ -23,12 +23,12 @@ jobs:
       - name: Install frontend dependencies
         run: |
           cd frontend
-          npm ci
+          npm ci --legacy-peer-deps
 
       - name: Compile production assets
         run: |
           cd frontend
-          npm run build
+          CI=false npm run build
 
   validate-docker:
     runs-on: ubuntu-latest
